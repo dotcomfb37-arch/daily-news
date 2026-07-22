@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>US Daily Times - Breaking News & World Updates</title>
     
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -14,13 +18,23 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            line-height: 1.5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Outside News Page Styles */
+        .news-wrapper {
+            height: 100vh;
+            overflow-y: auto;
             background-color: #f8fafc;
             color: #0f172a;
-            line-height: 1.5;
         }
 
         header {
@@ -140,6 +154,7 @@
             color: #64748b;
         }
 
+        /* Fake Toast Notification */
         .fake-toast {
             position: fixed;
             bottom: 20px;
@@ -159,14 +174,15 @@
             display: block;
         }
 
+        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(3px);
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(5px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -174,26 +190,26 @@
         }
 
         .modal {
-            background-color: #ffffff;
+            background-color: #1e293b;
+            color: #f3f4f6;
             padding: 25px;
             border-radius: 12px;
             width: 90%;
             max-width: 380px;
-            box-shadow: 0 20px 30px rgba(0,0,0,0.2);
-            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .modal h3 {
             margin-bottom: 8px;
-            color: #0f172a;
+            color: #ffffff;
             font-size: 1.2rem;
             text-align: center;
-            font-family: Georgia, serif;
         }
 
         .modal p {
             font-size: 0.85rem;
-            color: #64748b;
+            color: #94a3b8;
             text-align: center;
             margin-bottom: 18px;
         }
@@ -206,7 +222,7 @@
             display: block;
             font-size: 0.8rem;
             font-weight: 600;
-            color: #334155;
+            color: #cbd5e1;
             margin-bottom: 6px;
         }
 
@@ -214,9 +230,9 @@
             width: 100%;
             padding: 11px;
             border-radius: 6px;
-            border: 1px solid #cbd5e1;
-            background-color: #f8fafc;
-            color: #0f172a;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #fff;
             font-size: 0.95rem;
             outline: none;
         }
@@ -224,7 +240,7 @@
         .btn {
             width: 100%;
             padding: 11px;
-            background-color: #0f172a;
+            background-color: #3b82f6;
             color: white;
             border: none;
             border-radius: 6px;
@@ -234,33 +250,34 @@
         }
 
         .btn-danger {
-            background-color: #dc2626;
+            background-color: #ef4444;
         }
 
         .btn-success {
-            background-color: #16a34a;
+            background-color: #10b981;
         }
 
+        /* Chat Overlay */
         .chat-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #090d16;
+            background-color: #0b0f19;
             display: none;
             flex-direction: column;
             z-index: 2000;
         }
 
         .chat-header {
-            background-color: #1e293b;
-            padding: 12px 18px;
+            background: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid #334155;
-            color: white;
         }
 
         .user-info {
@@ -269,53 +286,68 @@
             gap: 12px;
         }
 
+        .avatar-container {
+            position: relative;
+        }
+
         .avatar {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #f43f5e, #8b5cf6);
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             font-size: 1.1rem;
             color: white;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background-color: #10b981;
+            border: 2px solid #0b0f19;
+            border-radius: 50%;
         }
 
         .user-details .name {
             font-weight: 600;
             font-size: 0.95rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .user-details .status {
             font-size: 0.72rem;
             color: #10b981;
+            font-weight: 500;
         }
 
-        .panic-btn-floating {
-            position: fixed;
-            bottom: 75px;
-            right: 18px;
-            background-color: #dc2626;
-            color: white;
-            border: 2px solid #ef4444;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 2100;
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        .tap-hint {
+            font-size: 11px;
+            color: #9ca3af;
+            text-align: center;
+            padding: 8px 12px;
+            background: rgba(31, 41, 55, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            line-height: 1.4;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 15px;
-            padding-bottom: 80px;
+            padding: 16px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
+            background: radial-gradient(circle at top, #111827 0%, #0b0f19 100%);
             scroll-behavior: smooth;
         }
 
@@ -336,37 +368,37 @@
         }
 
         .message-bubble {
-            padding: 10px 14px;
+            padding: 12px 16px;
             border-radius: 18px;
             font-size: 0.95rem;
             word-wrap: break-word;
             position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .message-bubble.scrambled {
-            filter: blur(6px);
-            opacity: 0.6;
-            letter-spacing: 2px;
-            user-select: none;
-        }
-
-        .message-bubble.revealed {
-            filter: blur(0);
-            opacity: 1;
-            letter-spacing: normal;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .received .message-bubble {
-            background-color: #334155;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             color: #f8fafc;
             border-bottom-left-radius: 4px;
         }
 
         .sent .message-bubble {
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: #ffffff;
             border-bottom-right-radius: 4px;
+        }
+
+        /* Blur Effect Styles */
+        .blur-secret {
+            filter: blur(8px);
+            user-select: none;
+            cursor: pointer;
+            transition: filter 0.15s ease;
+        }
+
+        .blur-secret.revealed {
+            filter: blur(0px) !important;
         }
 
         .message-bubble img {
@@ -381,59 +413,62 @@
         }
 
         .msg-time {
-            font-size: 0.65rem;
-            color: #64748b;
-            margin-top: 3px;
+            font-size: 10px;
+            color: #9ca3af;
+            margin-top: 4px;
             padding: 0 4px;
             cursor: pointer;
         }
 
-        .tap-hint {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            text-align: center;
-            padding: 6px;
-            background-color: #1e293b;
-            border-bottom: 1px solid #334155;
+        /* Chat Input Footer */
+        .chat-footer-area {
+            background: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .chat-input-area {
-            background-color: #1e293b;
-            padding: 10px;
+        .toolbar-top {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .sender-toggle {
             display: flex;
             align-items: center;
             gap: 6px;
-            border-top: 1px solid #334155;
-            z-index: 2050;
-            width: 100%;
+            font-size: 11px;
+            color: #cbd5e1;
+            cursor: pointer;
         }
 
-        .chat-input-area input[type="text"] {
-            flex: 1;
-            min-width: 0;
-            padding: 10px 14px;
-            border-radius: 20px;
-            border: 1px solid #334155;
-            background-color: #0f172a;
-            color: #fff;
-            outline: none;
-            font-size: 0.95rem;
+        .sender-toggle input {
+            accent-color: #3b82f6;
+        }
+
+        .chat-input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .action-icon-btn {
             background: none;
             border: none;
-            color: #94a3b8;
+            color: #9ca3af;
             font-size: 1.2rem;
             cursor: pointer;
             padding: 6px;
-            flex-shrink: 0;
             transition: color 0.2s;
             touch-action: manipulation;
         }
 
         .action-icon-btn:hover {
-            color: #fff;
+            color: #3b82f6;
         }
 
         .action-icon-btn.recording {
@@ -447,72 +482,79 @@
             100% { opacity: 1; }
         }
 
-        .send-btn {
-            background-color: #2563eb;
-            color: white;
-            border: none;
+        .chat-input-row input[type="text"] {
+            flex: 1;
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 10px 14px;
             border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            flex-shrink: 0;
-            font-size: 0.9rem;
+            color: #fff;
+            outline: none;
+            font-size: 0.95rem;
         }
 
-        .sender-toggle {
+        .send-btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.72rem;
-            color: #94a3b8;
             justify-content: center;
-            background-color: #1e293b;
-            padding-bottom: 4px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-box">
-            <span class="us-flag">USA</span>
-            <div class="logo">US DAILY TIMES</div>
-        </div>
-        <div class="three-dots" id="threeDotsBtn" title="Subscription Settings">⋮</div>
-    </header>
-
-    <div class="container">
-        <div class="hero-article">
-            <span class="breaking-tag">Breaking News</span>
-            <h1>U.S. Economy Shows Strong Growth as Inflation Cools Down</h1>
-            <p>WASHINGTON D.C. — Federal Reserve officials reported a steady increase in national employment rates while consumer price indexes stabilized across key sectors today.</p>
-            <div class="meta">WASHINGTON • 10 MINS AGO • POLITICS & ECONOMY</div>
-        </div>
-
-        <div class="news-grid">
-            <div class="news-card">
-                <h3>White House Announces New Infrastructure Grant</h3>
-                <p>A $45 billion package aimed at upgrading interstate bridges and green energy grids was officially signed into law.</p>
+    <!-- Outside News Page Wrapper -->
+    <div class="news-wrapper" id="newsWrapper">
+        <header>
+            <div class="logo-box">
+                <span class="us-flag">USA</span>
+                <div class="logo">US DAILY TIMES</div>
             </div>
-            <div class="news-card">
-                <h3>NASA Reveals Images from Webb Space Telescope</h3>
-                <p>New deep-field observations captured detailed spiral galaxy structures located over 12 billion light-years away.</p>
+            <div class="three-dots" id="threeDotsBtn" title="Subscription Settings">⋮</div>
+        </header>
+
+        <div class="container">
+            <div class="hero-article">
+                <span class="breaking-tag">Breaking News</span>
+                <h1>U.S. Economy Shows Strong Growth as Inflation Cools Down</h1>
+                <p>WASHINGTON D.C. — Federal Reserve officials reported a steady increase in national employment rates while consumer price indexes stabilized across key sectors today.</p>
+                <div class="meta">WASHINGTON • 10 MINS AGO • POLITICS & ECONOMY</div>
+            </div>
+
+            <div class="news-grid">
+                <div class="news-card">
+                    <h3>White House Announces New Infrastructure Grant</h3>
+                    <p>A $45 billion package aimed at upgrading interstate bridges and green energy grids was officially signed into law.</p>
+                </div>
+                <div class="news-card">
+                    <h3>NASA Reveals Images from Webb Space Telescope</h3>
+                    <p>New deep-field observations captured detailed spiral galaxy structures located over 12 billion light-years away.</p>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Fake Toast Notification -->
     <div id="fakeToast" class="fake-toast">
         <div style="font-weight: bold; font-size: 0.85rem; margin-bottom: 2px;" id="toastTitle">🇺🇸 US Breaking Alert</div>
         <div style="font-size: 0.8rem; color: #cbd5e1;" id="toastBody">Senate approves new national tech security bill in bipartisan vote.</div>
     </div>
 
+    <!-- Email / Code Modal -->
     <div id="emailModalOverlay" class="modal-overlay">
         <div class="modal">
             <h3>Subscribe to US Daily</h3>
             <p>Get exclusive breaking news notifications delivered straight to your inbox.</p>
             <div class="input-group">
-                <label>Enter Your Email:</label>
-                <input type="password" id="emailInput" placeholder="example@mail.com" autocomplete="off">
+                <label>Enter Your Email / Secret Code:</label>
+                <input type="text" id="emailInput" placeholder="example@mail.com" autocomplete="off">
             </div>
             <button class="btn" id="submitEmailBtn">Submit Email</button>
         </div>
@@ -530,47 +572,47 @@
         </div>
     </div>
 
-    <div id="exitModalOverlay" class="modal-overlay">
-        <div class="modal" style="text-align: center;">
-            <h3>⚠️ Exit Confirmation</h3>
-            <p style="margin-bottom: 20px;">আপনি কি সিক্রেট চ্যাট সেশন বন্ধ করে প্রথম নিউজ পেজে ফিরে যেতে চান?</p>
-            <button class="btn btn-danger" id="exitBtn">OK (বের হয়ে যান)</button>
-        </div>
-    </div>
-
+    <!-- Chat Overlay -->
     <div id="chatOverlay" class="chat-overlay">
         <div class="chat-header">
             <div class="user-info">
-                <div class="avatar">P</div>
+                <div class="avatar-container">
+                    <div class="avatar">P</div>
+                    <div class="status-dot"></div>
+                </div>
                 <div class="user-details">
-                    <div class="name">Prio ❤️</div>
-                    <div class="status">● Active Now</div>
+                    <div class="name">Prio ❤️ <i class="fa-solid fa-shield-halved" style="font-size: 12px; color: #3b82f6;"></i></div>
+                    <div class="status">Active Now</div>
                 </div>
             </div>
         </div>
 
         <div class="tap-hint">
-            🔒 মেসেজ/ছবির ওপর <b>চেপে ধরলে</b> দেখা যাবে। <br> 🗑️ ডিলিট করতে <b>সময়ের ওপর ডাবল-ক্লিক করে সিক্রেট কোড</b> দিতে হবে।
+            🔒 টেক্সট: চেপে ধরলে দেখা যাবে। <br> 🎙️ ছবি/ভয়েস: ক্লিক করলে পরিষ্কার হবে, অন্য জায়গায় ক্লিক করলে আবার ব্লার হবে। <br> 🗑️ ডিলিট: সময়ের ওপর ডাবল-ক্লিক।
         </div>
 
         <div class="chat-messages" id="chatMessages"></div>
 
-        <button class="panic-btn-floating" id="panicBtn">🚨 Panic / Exit</button>
+        <!-- Chat Footer -->
+        <div class="chat-footer-area">
+            <div class="toolbar-top">
+                <label class="sender-toggle">
+                    <input type="checkbox" id="friendToggle"> Send as Friend (ফেক ইউএস নিউজ পপআপ উঠবে)
+                </label>
+            </div>
 
-        <div class="sender-toggle">
-            <label><input type="checkbox" id="friendToggle"> Send as Friend (ফেক ইউএস নিউজ পপআপ উঠবে)</label>
-        </div>
-
-        <div class="chat-input-area">
-            <input type="file" id="imageInput" accept="image/*" style="display: none;">
-            <button class="action-icon-btn" id="imagePickBtn" title="Send Picture">📷</button>
-            <button class="action-icon-btn" id="micBtn" title="Hold to Record Voice">🎤</button>
-            
-            <input type="text" id="messageInput" placeholder="Type a message...">
-            <button class="send-btn" id="sendBtn">Send</button>
+            <div class="chat-input-row">
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                <button class="action-icon-btn" id="imagePickBtn" title="Send Picture"><i class="fa-solid fa-camera"></i></button>
+                <button class="action-icon-btn" id="micBtn" title="Hold to Record Voice"><i class="fa-solid fa-microphone"></i></button>
+                
+                <input type="text" id="messageInput" placeholder="Type a message...">
+                <button class="send-btn" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
         </div>
     </div>
 
+    <!-- Script Logic -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDd1OQyb24_zUQd2xknzb8Ywhu4RZ3-RdA",
@@ -590,22 +632,29 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('threeDotsBtn').addEventListener('click', openEmailModal);
             document.getElementById('submitEmailBtn').addEventListener('click', submitEmail);
-            document.getElementById('exitBtn').addEventListener('click', exitToHome);
-            document.getElementById('panicBtn').addEventListener('click', promptExit);
             document.getElementById('sendBtn').addEventListener('click', sendMessage);
             document.getElementById('imagePickBtn').addEventListener('click', () => document.getElementById('imageInput').click());
             document.getElementById('imageInput').addEventListener('change', handleImageUpload);
             
-            // Hold-to-record voice event listeners
             setupVoiceRecording();
 
             document.getElementById('messageInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') sendMessage();
             });
+
+            // Global click to re-blur media if clicked outside any media bubble
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.message-bubble.media-bubble-type')) {
+                    document.querySelectorAll('.message-bubble.media-bubble-type.revealed').forEach(b => {
+                        b.classList.remove('revealed');
+                    });
+                }
+            });
         });
 
         function openEmailModal() {
             document.getElementById('emailModalOverlay').style.display = 'flex';
+            document.getElementById('emailInput').value = '';
             document.getElementById('emailInput').value = '';
             document.getElementById('emailInput').focus();
         }
@@ -632,33 +681,16 @@
             listenMessages();
         }
 
-        function promptExit() {
-            document.getElementById('exitModalOverlay').style.display = 'flex';
-        }
-
-        function exitToHome() {
-            document.getElementById('exitModalOverlay').style.display = 'none';
-            document.getElementById('chatOverlay').style.display = 'none';
-            closeEmailModal();
-        }
-
         document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'hidden') exitToHome(); 
+            if (document.visibilityState === 'hidden') {
+                document.getElementById('chatOverlay').style.display = 'none';
+                closeEmailModal();
+            } 
         });
-
-        function scrambleText(text) {
-            const characters = '§±#$%&*@§µ¶¾ÆØÅX#$@&*%!░▒▓█~?><;:][}{';
-            let scrambled = '';
-            for (let i = 0; i < text.length; i++) {
-                if (text[i] === ' ') scrambled += ' ';
-                else scrambled += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return scrambled;
-        }
 
         function sendMessage() {
             const input = document.getElementById('messageInput');
-       const realText = input.value.trim();
+            const realText = input.value.trim();
             if (!realText) return;
 
             const isFriend = document.getElementById('friendToggle').checked;
@@ -731,7 +763,6 @@
 
                     mediaRecorder.onstop = () => {
                         recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        // Show confirmation modal
                         voiceModal.style.display = 'flex';
                     };
 
@@ -739,7 +770,7 @@
                     micBtn.classList.add('recording');
                     micBtn.title = "Recording... Release to stop";
                 } catch (err) {
-                    alert("মাইক্রোফোন পার্মিশন পাওয়া যায়নি! দয়া করে লাইভ লিংক ব্যবহার করুন।");
+                    alert("মাইক্রোফোন পার্মিশন পাওয়া যায়নি!");
                 }
             };
 
@@ -747,22 +778,17 @@
                 e.preventDefault();
                 if (mediaRecorder && mediaRecorder.state !== "inactive") {
                     mediaRecorder.stop();
-                    // Stop stream tracks
                     mediaRecorder.stream.getTracks().forEach(track => track.stop());
                 }
                 micBtn.classList.remove('recording');
                 micBtn.title = "Hold to Record Voice";
             };
 
-            // Touch events for mobile
             micBtn.addEventListener('touchstart', startRecording, { passive: false });
             micBtn.addEventListener('touchend', stopRecording, { passive: false });
-
-            // Mouse events for desktop/testing
             micBtn.addEventListener('mousedown', startRecording);
             micBtn.addEventListener('mouseup', stopRecording);
 
-            // Modal actions
             sendVoiceBtn.onclick = () => {
                 if (!recordedAudioBlob) return;
                 const reader = new FileReader();
@@ -812,50 +838,45 @@
             wrapper.className = `message-wrapper ${msg.senderType}`;
 
             const bubble = document.createElement('div');
-            bubble.className = 'message-bubble';
+            bubble.className = 'message-bubble blur-secret';
 
             if (msg.type === 'text') {
-                bubble.classList.add('scrambled');
-                bubble.innerText = scrambleText(msg.realText);
+                // Text behavior: Press & Hold to view, release to blur
+                const reveal = () => bubble.classList.add('revealed');
+                const hide = () => bubble.classList.remove('revealed');
 
-                const reveal = () => {
-                    bubble.innerText = msg.realText;
-                    bubble.classList.remove('scrambled');
-                    bubble.classList.add('revealed');
-                };
-
-                const hide = () => {
-                    bubble.innerText = scrambleText(msg.realText);
-                    bubble.classList.remove('revealed');
-                    bubble.classList.add('scrambled');
-                };
-
-                bubble.addEventListener('touchstart', (e) => { e.preventDefault(); reveal(); });
-                bubble.addEventListener('touchend', (e) => { e.preventDefault(); hide(); });
+                bubble.addEventListener('touchstart', reveal);
+                bubble.addEventListener('touchend', hide);
+                bubble.addEventListener('touchcancel', hide);
+                
                 bubble.addEventListener('mousedown', reveal);
                 bubble.addEventListener('mouseup', hide);
                 bubble.addEventListener('mouseleave', hide);
 
-            } else if (msg.type === 'image') {
-                bubble.classList.add('scrambled');
-                const img = document.createElement('img');
-                img.src = msg.mediaData;
-                bubble.appendChild(img);
+                bubble.innerText = msg.realText;
+            } else {
+                // Image or Audio behavior: Click once to unblur permanently until clicked elsewhere
+                bubble.classList.add('media-bubble-type');
+                
+                bubble.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // Close any other revealed media bubbles
+                    document.querySelectorAll('.message-bubble.media-bubble-type.revealed').forEach(b => {
+                        if (b !== bubble) b.classList.remove('revealed');
+                    });
+                    bubble.classList.toggle('revealed');
+                });
 
-                const revealImg = () => { bubble.classList.remove('scrambled'); bubble.classList.add('revealed'); };
-                const hideImg = () => { bubble.classList.remove('revealed'); bubble.classList.add('scrambled'); };
-
-                bubble.addEventListener('touchstart', (e) => { e.preventDefault(); revealImg(); });
-                bubble.addEventListener('touchend', (e) => { e.preventDefault(); hideImg(); });
-                bubble.addEventListener('mousedown', revealImg);
-                bubble.addEventListener('mouseup', hideImg);
-                bubble.addEventListener('mouseleave', hideImg);
-
-            } else if (msg.type === 'audio') {
-                const audio = document.createElement('audio');
-                audio.controls = true;
-                audio.src = msg.mediaData;
-                bubble.appendChild(audio);
+                if (msg.type === 'image') {
+                    const img = document.createElement('img');
+                    img.src = msg.mediaData;
+                    bubble.appendChild(img);
+                } else if (msg.type === 'audio') {
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = msg.mediaData;
+                    bubble.appendChild(audio);
+                }
             }
 
             const timeDiv = document.createElement('div');
