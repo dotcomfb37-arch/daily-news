@@ -66,12 +66,6 @@
             border-radius: 4px;
             user-select: none;
             color: #cbd5e1;
-            transition: background 0.2s;
-        }
-
-        .three-dots:hover {
-            background-color: #1e293b;
-            color: #fff;
         }
 
         .container {
@@ -132,12 +126,6 @@
             border: 1px solid #e2e8f0;
             border-radius: 8px;
             padding: 15px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .news-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .news-card h3 {
@@ -164,17 +152,11 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             display: none;
             z-index: 999;
-            animation: slideUp 0.3s ease;
             max-width: 300px;
         }
 
         .fake-toast.show {
             display: block;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(80px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
 
         .modal-overlay {
@@ -199,7 +181,6 @@
             max-width: 380px;
             box-shadow: 0 20px 30px rgba(0,0,0,0.2);
             border: 1px solid #e2e8f0;
-            animation: fadeIn 0.3s ease;
         }
 
         .modal h3 {
@@ -238,7 +219,6 @@
             color: #0f172a;
             font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.2s;
         }
 
         .btn {
@@ -251,11 +231,6 @@
             font-size: 0.95rem;
             cursor: pointer;
             font-weight: 600;
-            transition: opacity 0.2s;
-        }
-        
-        .btn:hover {
-            opacity: 0.9;
         }
 
         .btn-danger {
@@ -282,7 +257,6 @@
             justify-content: space-between;
             border-bottom: 1px solid #334155;
             color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .user-info {
@@ -326,8 +300,8 @@
             font-size: 0.8rem;
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5);
             z-index: 2100;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
         }
 
         .chat-messages {
@@ -363,8 +337,6 @@
             font-size: 0.95rem;
             word-wrap: break-word;
             position: relative;
-            cursor: pointer;
-            user-select: none;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
@@ -372,6 +344,7 @@
             filter: blur(6px);
             opacity: 0.6;
             letter-spacing: 2px;
+            user-select: none;
         }
 
         .message-bubble.revealed {
@@ -390,6 +363,17 @@
             background: linear-gradient(135deg, #2563eb, #7c3aed);
             color: #ffffff;
             border-bottom-right-radius: 4px;
+        }
+
+        .message-bubble img {
+            max-width: 200px;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .message-bubble audio {
+            max-width: 200px;
+            height: 35px;
         }
 
         .msg-time {
@@ -411,16 +395,19 @@
 
         .chat-input-area {
             background-color: #1e293b;
-            padding: 12px;
+            padding: 10px;
             display: flex;
-            gap: 10px;
+            align-items: center;
+            gap: 6px;
             border-top: 1px solid #334155;
             z-index: 2050;
+            width: 100%;
         }
 
-        .chat-input-area input {
+        .chat-input-area input[type="text"] {
             flex: 1;
-            padding: 12px 16px;
+            min-width: 0;
+            padding: 10px 14px;
             border-radius: 20px;
             border: 1px solid #334155;
             background-color: #0f172a;
@@ -429,23 +416,50 @@
             font-size: 0.95rem;
         }
 
+        .action-icon-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 6px;
+            flex-shrink: 0;
+            transition: color 0.2s;
+        }
+
+        .action-icon-btn:hover {
+            color: #fff;
+        }
+
+        .action-icon-btn.recording {
+            color: #ef4444;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
         .send-btn {
             background-color: #2563eb;
             color: white;
             border: none;
-            padding: 10px 18px;
+            padding: 10px 14px;
             border-radius: 20px;
             cursor: pointer;
             font-weight: 600;
+            flex-shrink: 0;
+            font-size: 0.9rem;
         }
 
         .sender-toggle {
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: #94a3b8;
-            margin-bottom: 4px;
             justify-content: center;
             background-color: #1e293b;
             padding-bottom: 4px;
@@ -459,7 +473,7 @@
             <span class="us-flag">USA</span>
             <div class="logo">US DAILY TIMES</div>
         </div>
-        <div class="three-dots" onclick="openEmailModal()" title="Subscription Settings">⋮</div>
+        <div class="three-dots" id="threeDotsBtn" title="Subscription Settings">⋮</div>
     </header>
 
     <div class="container">
@@ -495,7 +509,7 @@
                 <label>Enter Your Email:</label>
                 <input type="text" id="emailInput" placeholder="example@mail.com" autocomplete="off">
             </div>
-            <button class="btn" onclick="submitEmail()">Submit Email</button>
+            <button class="btn" id="submitEmailBtn">Submit Email</button>
         </div>
     </div>
 
@@ -503,7 +517,7 @@
         <div class="modal" style="text-align: center;">
             <h3>⚠️ Exit Confirmation</h3>
             <p style="margin-bottom: 20px;">আপনি কি সিক্রেট চ্যাট সেশন বন্ধ করে প্রথম নিউজ পেজে ফিরে যেতে চান?</p>
-            <button class="btn btn-danger" onclick="exitToHome()">OK (বের হয়ে যান)</button>
+            <button class="btn btn-danger" id="exitBtn">OK (বের হয়ে যান)</button>
         </div>
     </div>
 
@@ -519,20 +533,24 @@
         </div>
 
         <div class="tap-hint">
-            🔒 মেসেজের ওপর <b>চেপে ধরলে</b> লেখা দেখাবে। <br> 🗑️ ডিলিট করতে <b>সময়ের ওপর ডাবল-ক্লিক করে সিক্রেট কোড</b> দিতে হবে।
+            🔒 মেসেজ/ছবির ওপর <b>চেপে ধরলে</b> দেখা যাবে। <br> 🗑️ ডিলিট করতে <b>সময়ের ওপর ডাবল-ক্লিক করে সিক্রেট কোড</b> দিতে হবে।
         </div>
 
         <div class="chat-messages" id="chatMessages"></div>
 
-        <button class="panic-btn-floating" onclick="promptExit()">🚨 Panic / Exit</button>
+        <button class="panic-btn-floating" id="panicBtn">🚨 Panic / Exit</button>
 
         <div class="sender-toggle">
-            <label><input type="checkbox" id="friendToggle"> Send as Friend (মেসেজ পাঠালে ফেক ইউএস নিউজ পপআপ উঠবে)</label>
+            <label><input type="checkbox" id="friendToggle"> Send as Friend (ফেক ইউএস নিউজ পপআপ উঠবে)</label>
         </div>
 
         <div class="chat-input-area">
-            <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
-            <button class="send-btn" onclick="sendMessage()">Send</button>
+            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            <button class="action-icon-btn" id="imagePickBtn" title="Send Picture">📷</button>
+            <button class="action-icon-btn" id="micBtn" title="Record Voice">🎤</button>
+            
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button class="send-btn" id="sendBtn">Send</button>
         </div>
     </div>
 
@@ -550,8 +568,23 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // সিক্রেট কোডটি সরাসরি না রেখে Base64 এনকোড করে রাখা হলো ("MzcyNA==" মানে হলো "3724")
-        const ENCODED_SECRET = "MzcyNA==";
+        const ENCODED_SECRET = "MzcyNA=="; // "3724"
+
+        // Event Listeners setup for robust execution
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('threeDotsBtn').addEventListener('click', openEmailModal);
+            document.getElementById('submitEmailBtn').addEventListener('click', submitEmail);
+            document.getElementById('exitBtn').addEventListener('click', exitToHome);
+            document.getElementById('panicBtn').addEventListener('click', promptExit);
+            document.getElementById('sendBtn').addEventListener('click', sendMessage);
+            document.getElementById('imagePickBtn').addEventListener('click', () => document.getElementById('imageInput').click());
+            document.getElementById('imageInput').addEventListener('change', handleImageUpload);
+            document.getElementById('micBtn').addEventListener('click', toggleRecordVoice);
+            
+            document.getElementById('messageInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+        });
 
         function openEmailModal() {
             document.getElementById('emailModalOverlay').style.display = 'flex';
@@ -565,7 +598,6 @@
 
         function submitEmail() {
             const inputVal = document.getElementById('emailInput').value.trim();
-            // ইনপুট দেওয়া কোড এনকোড করে সিক্রেট কোডের সাথে মেলানো হচ্ছে
             const encodedInput = btoa(inputVal);
 
             if (encodedInput === ENCODED_SECRET || inputVal.includes("3724")) {
@@ -616,29 +648,111 @@
             
             const msgObj = {
                 id: uniqueId,
+                type: 'text',
                 realText: realText,
-                type: isFriend ? 'received' : 'sent',
+                senderType: isFriend ? 'received' : 'sent',
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
 
             database.ref('secret_room_chats/' + uniqueId).set(msgObj);
             input.value = '';
 
-            if (isFriend) {
+           if (isFriend) {
                 showFakeToast("🇺🇸 US Breaking News", "White House press briefing updated just now.");
             }
         }
 
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') sendMessage();
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(uploadEvent) {
+                const base64Image = uploadEvent.target.result;
+                const isFriend = document.getElementById('friendToggle').checked;
+                const uniqueId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+                const msgObj = {
+                    id: uniqueId,
+                    type: 'image',
+                    mediaData: base64Image,
+                    senderType: isFriend ? 'received' : 'sent',
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+
+                database.ref('secret_room_chats/' + uniqueId).set(msgObj);
+                event.target.value = '';
+
+                if (isFriend) {
+                    showFakeToast("🇺🇸 US Breaking News", "New financial infographic published.");
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        async function toggleRecordVoice() {
+            const micBtn = document.getElementById('micBtn');
+
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const base64Audio = e.target.result;
+                            const isFriend = document.getElementById('friendToggle').checked;
+                            const uniqueId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+                            const msgObj = {
+                                id: uniqueId,
+                                type: 'audio',
+                                mediaData: base64Audio,
+                                senderType: isFriend ? 'received' : 'sent',
+                                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            };
+
+                            database.ref('secret_room_chats/' + uniqueId).set(msgObj);
+
+                            if (isFriend) {
+                                showFakeToast("🇺🇸 US Breaking News", "Audio broadcast report updated.");
+                            }
+                        };
+                        reader.readAsDataURL(audioBlob);
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    micBtn.classList.add('recording');
+                    micBtn.title = "Recording... Click to Stop";
+                } catch (err) {
+                    alert("মাইক্রোফোন পার্মিশন পাওয়া যায়নি! দয়া করে GitHub-এর লাইভ লিংক ব্যবহার করুন।");
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                micBtn.classList.remove('recording');
+                micBtn.title = "Record Voice";
+            }
         }
 
         function deleteMessage(id) {
-            let enteredCode = prompt("মেসেজ ডিলিট করতে সিক্রেট কোডটি দিন:");
+            let enteredCode = prompt("মেসেজ বা ফাইল ডিলিট করতে সিক্রেট কোডটি দিন:");
             if (btoa(enteredCode) === ENCODED_SECRET || enteredCode === "3724") {
                 database.ref('secret_room_chats/' + id).remove();
             } else if (enteredCode !== null) {
-                alert("ভুল কোড দেওয়া হয়েছে! মেসেজ ডিলিট হয়নি।");
+                alert("ভুল কোড দেওয়া হয়েছে! ডিলিট করা হয়নি।");
             }
         }
 
@@ -646,29 +760,54 @@
             const container = document.getElementById('chatMessages');
 
             const wrapper = document.createElement('div');
-            wrapper.className = `message-wrapper ${msg.type}`;
+            wrapper.className = `message-wrapper ${msg.senderType}`;
 
             const bubble = document.createElement('div');
-            bubble.className = 'message-bubble scrambled';
-            bubble.innerText = scrambleText(msg.realText);
+            bubble.className = 'message-bubble';
 
-            const reveal = () => {
-                bubble.innerText = msg.realText;
-                bubble.classList.remove('scrambled');
-                bubble.classList.add('revealed');
-            };
-
-            const hide = () => {
-                bubble.innerText = scrambleText(msg.realText);
-                bubble.classList.remove('revealed');
+            if (msg.type === 'text') {
                 bubble.classList.add('scrambled');
-            };
+                bubble.innerText = scrambleText(msg.realText);
 
-            bubble.addEventListener('touchstart', (e) => { e.preventDefault(); reveal(); });
-            bubble.addEventListener('touchend', (e) => { e.preventDefault(); hide(); });
-            bubble.addEventListener('mousedown', reveal);
-            bubble.addEventListener('mouseup', hide);
-            bubble.addEventListener('mouseleave', hide);
+                const reveal = () => {
+                    bubble.innerText = msg.realText;
+                    bubble.classList.remove('scrambled');
+                    bubble.classList.add('revealed');
+                };
+
+                const hide = () => {
+                    bubble.innerText = scrambleText(msg.realText);
+                    bubble.classList.remove('revealed');
+                    bubble.classList.add('scrambled');
+                };
+
+                bubble.addEventListener('touchstart', (e) => { e.preventDefault(); reveal(); });
+                bubble.addEventListener('touchend', (e) => { e.preventDefault(); hide(); });
+                bubble.addEventListener('mousedown', reveal);
+                bubble.addEventListener('mouseup', hide);
+                bubble.addEventListener('mouseleave', hide);
+
+            } else if (msg.type === 'image') {
+                bubble.classList.add('scrambled');
+                const img = document.createElement('img');
+                img.src = msg.mediaData;
+                bubble.appendChild(img);
+
+                const revealImg = () => { bubble.classList.remove('scrambled'); bubble.classList.add('revealed'); };
+                const hideImg = () => { bubble.classList.remove('revealed'); bubble.classList.add('scrambled'); };
+
+                bubble.addEventListener('touchstart', (e) => { e.preventDefault(); revealImg(); });
+                bubble.addEventListener('touchend', (e) => { e.preventDefault(); hideImg(); });
+                bubble.addEventListener('mousedown', revealImg);
+                bubble.addEventListener('mouseup', hideImg);
+                bubble.addEventListener('mouseleave', hideImg);
+
+            } else if (msg.type === 'audio') {
+                const audio = document.createElement('audio');
+                audio.controls = true;
+                audio.src = msg.mediaData;
+                bubble.appendChild(audio);
+            }
 
             const timeDiv = document.createElement('div');
             timeDiv.className = 'msg-time';
@@ -707,8 +846,9 @@
                 if (!data) {
                     const defaultMsg = {
                         id: 'welcome_msg_01',
-                        realText: "রিমোট সিক্রেট চ্যাটরুমে স্বাগতম! ঢাকা থেকে বরিশাল লাইভ কানেক্টেড।",
-                        type: "received",
+                        type: 'text',
+                        realText: "রিমোট সিক্রেট চ্যাটরুমে স্বাগতম! ছবি ও ভয়েস মেসেজ সিস্টেম চালু আছে।",
+                        senderType: "received",
                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                     };
                     appendMessage(defaultMsg);
@@ -716,11 +856,10 @@
                     const messages = Object.values(data);
                     messages.forEach(msg => appendMessage(msg));
 
-                    // যদি কেউ নতুন মেসেজ পাঠায় এবং চ্যাটবক্স ওপেন থাকে, তবে ফেক নিউজ নোটিফিকেশন পপআপ উঠবে
                     if (!isFirstLoad) {
                         const lastMsg = messages[messages.length - 1];
-                        if (lastMsg.type === 'received') {
-                            showFakeToast("🇺🇸 US Breaking Alert", "New international trade policy update published.");
+                        if (lastMsg.senderType === 'received') {
+                            showFakeToast("🇺🇸 US Breaking Alert", "New media file update published.");
                         }
                     }
                 }
@@ -737,4 +876,4 @@
         }
     </script>
 </body>
-</html>   
+</html>         
