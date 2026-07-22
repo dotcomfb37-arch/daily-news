@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Daily Times - Breaking News & World Updates</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            line-height: 1.5;
+        }
+
+        /* Top Navigation Header (USA News Style) */
+        header {
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #b91c1c;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .us-flag {
+            background-color: #b91c1c;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 3px;
+            letter-spacing: 1px;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            font-family: Georgia, serif;
+        }
+
+        .three-dots {
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 4px;
+            user-select: none;
+            color: #cbd5e1;
+            transition: background 0.2s;
+        }
+
+        .three-dots:hover {
+            background-color: #1e293b;
+            color: #fff;
+        }
+
+        /* Main News Container */
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .breaking-tag {
+            display: inline-block;
+            background-color: #b91c1c;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 3px 8px;
+            text-transform: uppercase;
+            border-radius: 3px;
+            margin-bottom: 8px;
+        }
+
+        .hero-article {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .hero-article h1 {
+            font-family: Georgia, serif;
+            font-size: 1.6rem;
+            color: #0f172a;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .hero-article p {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .meta {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 15px;
+        }
+
+        .news-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .news-card h3 {
+            font-family: Georgia, serif;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: #1e293b;
+        }
+
+        .news-card p {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        /* Fake News Toast Popup */
+        .fake-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #0f172a;
+            border-left: 4px solid #b91c1c;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 999;
+            animation: slideUp 0.3s ease;
+            max-width: 300px;
+        }
+
+        .fake-toast.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(80px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Modal Overlay for Email Prompt & Exit Confirmation */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(3px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .modal {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 380px;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+            border: 1px solid #e2e8f0;
+        }
+
+        .modal h3 {
+            margin-bottom: 8px;
+            color: #0f172a;
+            font-size: 1.2rem;
+            text-align: center;
+            font-family: Georgia, serif;
+        }
+
+        .modal p {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 11px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #0f172a;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 11px;
+            background-color: #0f172a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-danger {
+            background-color: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+
+        /* Secret Chat Interface */
+        .chat-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #090d16;
+            display: none;
+            flex-direction: column;
+            z-index: 2000;
+        }
+
+        .chat-header {
+            background-color: #1e293b;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #334155;
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f43f5e, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .user-details .name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-details .status {
+            font-size: 0.72rem;
+            color: #10b981;
+        }
+
+        /* Floating Panic Button at Bottom Right */
+        .panic-btn-floating {
+            position: fixed;
+            bottom: 75px;
+            right: 18px;
+            background-color: #dc2626;
+            color: white;
+            border: 2px solid #ef4444;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5);
+            z-index: 2100;
+            transition: transform 0.2s;
+        }
+
+        .panic-btn-floating:active {
+            transform: scale(0.95);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            padding-bottom: 80px; /* Space for floating panic button */
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
+        }
+
+        .message-wrapper.sent {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+
+        .message-wrapper.received {
+            align-self: flex-start;
+            align-items: flex-start;
+        }
+
+        /* Message Bubble with Hijibiji / Blur Obfuscation */
+        .message-bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            word-wrap: break-word;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .message-bubble.scrambled {
+            filter: blur(6px);
+            opacity: 0.6;
+            letter-spacing: 2px;
+        }
+
+        .message-bubble.revealed {
+            filter: blur(0);
+            opacity: 1;
+            letter-spacing: normal;
+        }
+
+        .received .message-bubble {
+            background-color: #334155;
+            color: #f8fafc;
+            border-bottom-left-radius: 4px;
+        }
+
+        .sent .message-bubble {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg-time {
+            font-size: 0.65rem;
+            color: #64748b;
+            margin-top: 3px;
+            padding: 0 4px;
+        }
+
+        .tap-hint {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-align: center;
+            padding: 6px;
+            background-color: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+
+        .chat-input-area {
+            background-color: #1e293b;
+            padding: 12px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #334155;
+            z-index: 2050;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: #fff;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .send-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .sender-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 4px;
+            justify-content: center;
+            background-color: #1e293b;
+            padding-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Public Facing Site (Camouflage USA News Portal) -->
+    <header>
+        <div class="logo-box">
+            <span class="us-flag">USA</span>
+            <div class="logo">US DAILY TIMES</div>
+        </div>
+        <div class="three-dots" onclick="openEmailModal()" title="Subscription Settings">⋮</div>
+    </header>
+
+    <div class="container">
+        <div class="hero-article">
+            <span class="breaking-tag">Breaking News</span>
+            <h1>U.S. Economy Shows Strong Growth as Inflation Cools Down</h1>
+            <p>WASHINGTON D.C. — Federal Reserve officials reported a steady increase in national employment rates while consumer price indexes stabilized across key sectors today.</p>
+            <div class="meta">WASHINGTON • 10 MINS AGO • POLITICS & ECONOMY</div>
+        </div>
+
+        <h2 style="margin-bottom: 12px; font-size: 1.1rem; font-family: Georgia, serif; color: #1e293b;">Top Stories in America</h2>
+
+        <div class="news-grid">
+            <div class="news-card">
+                <h3>White House Announces New Infrastructure Grant</h3>
+                <p>A $45 billion package aimed at upgrading interstate bridges and green energy grids was officially signed into law.</p>
+                <div class="meta" style="margin-top: 8px;">1 HOUR AGO</div>
+            </div>
+            <div class="news-card">
+                <h3>NASA Reveals Images from Webb Space Telescope</h3>
+                <p>New deep-field observations captured detailed spiral galaxy structures located over 12 billion light-years away.</p>
+                <div class="meta" style="margin-top: 8px;">2 HOURS AGO</div>
+            </div>
+            <div class="news-card">
+                <h3>Severe Weather Warning Issued for Midwest States</h3>
+                <p>Meteorologists warn of heavy rain and high winds across Illinois and Ohio through Thursday evening.</p>
+                <div class="meta" style="margin-top: 8px;">3 HOURS AGO</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fake Notification Popup -->
+    <div id="fakeToast" class="fake-toast">
+        <div style="font-weight: bold; font-size: 0.85rem; margin-bottom: 2px;" id="toastTitle">🇺🇸 US Breaking Alert</div>
+        <div style="font-size: 0.8rem; color: #cbd5e1;" id="toastBody">Senate approves new national tech security bill in bipartisan vote.</div>
+    </div>
+
+    <!-- Email Prompt Modal (Trigger) -->
+    <div id="emailModalOverlay" class="modal-overlay">
+        <div class="modal">
+            <h3>Subscribe to US Daily</h3>
+            <p>Get exclusive breaking news notifications delivered straight to your inbox.</p>
+            <div class="input-group">
+                <label>Enter Your Email:</label>
+                <input type="text" id="emailInput" placeholder="example@mail.com" autocomplete="off">
+            </div>
+            <button class="btn" onclick="submitEmail()">Submit Email</button>
+        </div>
+    </div>
+
+    <!-- Exit Confirmation Modal (Popup on Exit Attempt) -->
+    <div id="exitModalOverlay" class="modal-overlay">
+        <div class="modal" style="text-align: center;">
+            <h3>⚠️ Exit Confirmation</h3>
+            <p style="margin-bottom: 20px;">আপনি কি সিক্রেট চ্যাট সেশন বন্ধ করে প্রথম নিউজ পেজে ফিরে যেতে চান?</p>
+            <button class="btn btn-danger" onclick="exitToHome()">OK (বের হয়ে যান)</button>
+        </div>
+    </div>
+
+    <!-- Secret Chat Room Overlay -->
+    <div id="chatOverlay" class="chat-overlay">
+        <div class="chat-header">
+            <div class="user-info">
+                <div class="avatar">P</div>
+                <div class="user-details">
+                    <div class="name">Prio ❤️</div>
+                    <div class="status">● Active Now</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tap-hint">
+            🔒 মেসেজের ওপর <b>চেপে ধরলে (Tap & Hold)</b> লেখা দেখাবে। ছেড়ে দিলে আবার হিজী-বিজী হয়ে যাবে।
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages load here -->
+        </div>
+
+        <!-- Floating Panic Button (Bottom Right) -->
+        <button class="panic-btn-floating" onclick="promptExit()">🚨 Panic / Exit</button>
+
+        <div class="sender-toggle">
+            <label><input type="checkbox" id="friendToggle"> Send as Friend (মেসেজ পাঠালে ফেক ইউএস নিউজ পপআপ উঠবে)</label>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+            <button class="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const SECRET_CODE = "3724";
+
+        // Modal Controls
+        function openEmailModal() {
+            document.getElementById('emailModalOverlay').style.display = 'flex';
+            document.getElementById('emailInput').value = '';
+            document.getElementById('emailInput').focus();
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModalOverlay').style.display = 'none';
+        }
+
+        function submitEmail() {
+            const inputVal = document.getElementById('emailInput').value.trim();
+            
+            if (inputVal === SECRET_CODE || inputVal.includes(SECRET_CODE)) {
+                closeEmailModal();
+                openChat();
+            } else {
+                closeEmailModal();
+                showFakeToast("✉️ Subscription Confirmed", "Thank you for subscribing to US Daily Times news alerts!");
+            }
+        }
+
+        // Secret Chat Controls
+        function openChat() {
+            document.getElementById('chatOverlay').style.display = 'flex';
+            loadMessages();
+        }
+
+        // Prompt Exit Confirmation Modal
+        function promptExit() {
+            document.getElementById('exitModalOverlay').style.display = 'flex';
+        }
+
+        // Exit Completely to Home Page
+        function exitToHome() {
+            document.getElementById('exitModalOverlay').style.display = 'none';
+            document.getElementById('chatOverlay').style.display = 'none';
+            closeEmailModal();
+        }
+
+        // Auto Panic & Lock when user switches tab or minimizes/presses Home button
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                exitToHome(); // Instantly close chat session
+            }
+        });
+
+        // Prompt browser exit alert if someone tries to refresh/close tab
+        window.addEventListener('beforeunload', function (e) {
+            exitToHome();
+        });
+
+        // Panic Keyboard Shortcut (Esc Key)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                promptExit();
+            }
+        });
+
+        // Hijibiji Scramble Text Generator
+        function scrambleText(text) {
+            const characters = '§±#$%&*@§µ¶¾ÆØÅX#$@&*%!░▒▓█~?><;:][}{';
+            let scrambled = '';
+            for (let i = 0; i < text.length; i++) {
+                if (text[i] === ' ') {
+                    scrambled += ' ';
+                } else {
+                    scrambled += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+            }
+            return scrambled;
+        }
+
+        // Message Handling
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const realText = input.value.trim();
+            if (!realText) return;
+
+            const isFriend = document.getElementById('friendToggle').checked;
+            const msgObj = {
+                realText: realText,
+                type: isFriend ? 'received' : 'sent',
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            appendMessage(msgObj);
+            saveMessage(msgObj);
+
+            input.value = '';
+
+            if (isFriend) {
+                showFakeToast("🇺🇸 US Breaking News", "White House press briefing updated just now.");
+            }
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function appendMessage(msg) {
+            const container = document.getElementById('chatMessages');
+
+            const wrapper = document.createElement('div');
+            wrapper.className = `message-wrapper ${msg.type}`;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble scrambled';
+            bubble.innerText = scrambleText(msg.realText);
+
+            const reveal = () => {
+                bubble.innerText = msg.realText;
+                bubble.classList.remove('scrambled');
+                bubble.classList.add('revealed');
+            };
+
+            const hide = () => {
+                bubble.innerText = scrambleText(msg.realText);
+                bubble.classList.remove('revealed');
+                bubble.classList.add('scrambled');
+            };
+
+            // Touch Events for Mobile
+            bubble.addEventListener('touchstart', (e) => { e.preventDefault(); reveal(); });
+            bubble.addEventListener('touchend', (e) => { e.preventDefault(); hide(); });
+            bubble.addEventListener('touchcancel', (e) => { e.preventDefault(); hide(); });
+
+            // Mouse Events for PC
+            bubble.addEventListener('mousedown', reveal);
+            bubble.addEventListener('mouseup', hide);
+            bubble.addEventListener('mouseleave', hide);
+
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'msg-time';
+            timeDiv.innerText = msg.time;
+
+            wrapper.appendChild(bubble);
+            wrapper.appendChild(timeDiv);
+            container.appendChild(wrapper);
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function saveMessage(msg) {
+            let chatHistory = JSON.parse(localStorage.getItem('us_news_secret_chat') || '[]');
+            chatHistory.push(msg);
+            localStorage.setItem('us_news_secret_chat', JSON.stringify(chatHistory));
+        }
+
+        function loadMessages() {
+            const container = document.getElementById('chatMessages');
+            let chatHistory = JSON.parse(localStorage.getItem('us_news_secret_chat') || '[]');
+            
+            container.innerHTML = '';
+            
+            if (chatHistory.length === 0) {
+                const defaultMsg = {
+                    realText: "হেঁই, সিক্রেট চ্যাটরুমে স্বাগতম! মেসেজের ওপর ট্যাপ করে ধরে রাখলে লেখা দেখাবে।",
+                    type: "received",
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                appendMessage(defaultMsg);
+            } else {
+                chatHistory.forEach(msg => appendMessage(msg));
+            }
+        }
+
+        // Fake Toast Generator
+        function showFakeToast(title, body) {
+            const toast = document.getElementById('fakeToast');
+            document.getElementById('toastTitle').innerText = title;
+            document.getElementById('toastBody').innerText = body;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const emailModal = document.getElementById('emailModalOverlay');
+            const exitModal = document.getElementById('exitModalOverlay');
+            if (event.target === emailModal) closeEmailModal();
+            if (event.target === exitModal) exitToHome();
+        };
+    </script>
+</body>
+</html>
