@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>US Daily Times - Breaking News & World Updates</title>
+    
+    <!-- Firebase SDK (CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -18,7 +23,6 @@
             line-height: 1.5;
         }
 
-        /* Top Navigation Header (USA News Style) */
         header {
             background-color: #0f172a;
             color: #ffffff;
@@ -70,7 +74,6 @@
             color: #fff;
         }
 
-        /* Main News Container */
         .container {
             max-width: 900px;
             margin: 20px auto;
@@ -129,6 +132,12 @@
             border: 1px solid #e2e8f0;
             border-radius: 8px;
             padding: 15px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .news-card h3 {
@@ -143,7 +152,6 @@
             color: #64748b;
         }
 
-        /* Fake News Toast Popup */
         .fake-toast {
             position: fixed;
             bottom: 20px;
@@ -169,7 +177,6 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Modal Overlay for Email Prompt & Exit Confirmation */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -192,6 +199,7 @@
             max-width: 380px;
             box-shadow: 0 20px 30px rgba(0,0,0,0.2);
             border: 1px solid #e2e8f0;
+            animation: fadeIn 0.3s ease;
         }
 
         .modal h3 {
@@ -230,6 +238,7 @@
             color: #0f172a;
             font-size: 0.95rem;
             outline: none;
+            transition: border-color 0.2s;
         }
 
         .btn {
@@ -242,17 +251,17 @@
             font-size: 0.95rem;
             cursor: pointer;
             font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
         }
 
         .btn-danger {
             background-color: #dc2626;
         }
 
-        .btn-danger:hover {
-            background-color: #b91c1c;
-        }
-
-        /* Secret Chat Interface */
         .chat-overlay {
             position: fixed;
             top: 0;
@@ -273,6 +282,7 @@
             justify-content: space-between;
             border-bottom: 1px solid #334155;
             color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .user-info {
@@ -304,7 +314,6 @@
             color: #10b981;
         }
 
-        /* Floating Panic Button at Bottom Right */
         .panic-btn-floating {
             position: fixed;
             bottom: 75px;
@@ -319,21 +328,17 @@
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5);
             z-index: 2100;
-            transition: transform 0.2s;
-        }
-
-        .panic-btn-floating:active {
-            transform: scale(0.95);
         }
 
         .chat-messages {
             flex: 1;
             padding: 15px;
-            padding-bottom: 80px; /* Space for floating panic button */
+            padding-bottom: 80px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            scroll-behavior: smooth;
         }
 
         .message-wrapper {
@@ -352,7 +357,6 @@
             align-items: flex-start;
         }
 
-        /* Message Bubble with Hijibiji / Blur Obfuscation */
         .message-bubble {
             padding: 10px 14px;
             border-radius: 18px;
@@ -361,8 +365,7 @@
             position: relative;
             cursor: pointer;
             user-select: none;
-            -webkit-user-select: none;
-            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .message-bubble.scrambled {
@@ -394,6 +397,7 @@
             color: #64748b;
             margin-top: 3px;
             padding: 0 4px;
+            cursor: pointer;
         }
 
         .tap-hint {
@@ -450,7 +454,6 @@
 </head>
 <body>
 
-    <!-- Main Public Facing Site (Camouflage USA News Portal) -->
     <header>
         <div class="logo-box">
             <span class="us-flag">USA</span>
@@ -467,34 +470,23 @@
             <div class="meta">WASHINGTON • 10 MINS AGO • POLITICS & ECONOMY</div>
         </div>
 
-        <h2 style="margin-bottom: 12px; font-size: 1.1rem; font-family: Georgia, serif; color: #1e293b;">Top Stories in America</h2>
-
         <div class="news-grid">
             <div class="news-card">
                 <h3>White House Announces New Infrastructure Grant</h3>
                 <p>A $45 billion package aimed at upgrading interstate bridges and green energy grids was officially signed into law.</p>
-                <div class="meta" style="margin-top: 8px;">1 HOUR AGO</div>
             </div>
             <div class="news-card">
                 <h3>NASA Reveals Images from Webb Space Telescope</h3>
                 <p>New deep-field observations captured detailed spiral galaxy structures located over 12 billion light-years away.</p>
-                <div class="meta" style="margin-top: 8px;">2 HOURS AGO</div>
-            </div>
-            <div class="news-card">
-                <h3>Severe Weather Warning Issued for Midwest States</h3>
-                <p>Meteorologists warn of heavy rain and high winds across Illinois and Ohio through Thursday evening.</p>
-                <div class="meta" style="margin-top: 8px;">3 HOURS AGO</div>
             </div>
         </div>
     </div>
 
-    <!-- Fake Notification Popup -->
     <div id="fakeToast" class="fake-toast">
         <div style="font-weight: bold; font-size: 0.85rem; margin-bottom: 2px;" id="toastTitle">🇺🇸 US Breaking Alert</div>
         <div style="font-size: 0.8rem; color: #cbd5e1;" id="toastBody">Senate approves new national tech security bill in bipartisan vote.</div>
     </div>
 
-    <!-- Email Prompt Modal (Trigger) -->
     <div id="emailModalOverlay" class="modal-overlay">
         <div class="modal">
             <h3>Subscribe to US Daily</h3>
@@ -507,7 +499,6 @@
         </div>
     </div>
 
-    <!-- Exit Confirmation Modal (Popup on Exit Attempt) -->
     <div id="exitModalOverlay" class="modal-overlay">
         <div class="modal" style="text-align: center;">
             <h3>⚠️ Exit Confirmation</h3>
@@ -516,7 +507,6 @@
         </div>
     </div>
 
-    <!-- Secret Chat Room Overlay -->
     <div id="chatOverlay" class="chat-overlay">
         <div class="chat-header">
             <div class="user-info">
@@ -529,14 +519,11 @@
         </div>
 
         <div class="tap-hint">
-            🔒 মেসেজের ওপর <b>চেপে ধরলে (Tap & Hold)</b> লেখা দেখাবে। ছেড়ে দিলে আবার হিজী-বিজী হয়ে যাবে।
+            🔒 মেসেজের ওপর <b>চেপে ধরলে</b> লেখা দেখাবে। <br> 🗑️ ডিলিট করতে <b>সময়ের ওপর ডাবল-ক্লিক করে সিক্রেট কোড</b> দিতে হবে।
         </div>
 
-        <div class="chat-messages" id="chatMessages">
-            <!-- Messages load here -->
-        </div>
+        <div class="chat-messages" id="chatMessages"></div>
 
-        <!-- Floating Panic Button (Bottom Right) -->
         <button class="panic-btn-floating" onclick="promptExit()">🚨 Panic / Exit</button>
 
         <div class="sender-toggle">
@@ -550,9 +537,22 @@
     </div>
 
     <script>
-        const SECRET_CODE = "3724";
+        const firebaseConfig = {
+            apiKey: "AIzaSyDd1OQyb24_zUQd2xknzb8Ywhu4RZ3-RdA",
+            authDomain: "issgi96.firebaseapp.com",
+            projectId: "issgi96",
+            storageBucket: "issgi96.firebasestorage.app",
+            messagingSenderId: "232385854323",
+            appId: "1:232385854323:web:68ef75d42d700a21b52306",
+            measurementId: "G-FSTGCL1QPG"
+        };
 
-        // Modal Controls
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // সিক্রেট কোডটি সরাসরি না রেখে Base64 এনকোড করে রাখা হলো ("MzcyNA==" মানে হলো "3724")
+        const ENCODED_SECRET = "MzcyNA==";
+
         function openEmailModal() {
             document.getElementById('emailModalOverlay').style.display = 'flex';
             document.getElementById('emailInput').value = '';
@@ -565,8 +565,10 @@
 
         function submitEmail() {
             const inputVal = document.getElementById('emailInput').value.trim();
-            
-            if (inputVal === SECRET_CODE || inputVal.includes(SECRET_CODE)) {
+            // ইনপুট দেওয়া কোড এনকোড করে সিক্রেট কোডের সাথে মেলানো হচ্ছে
+            const encodedInput = btoa(inputVal);
+
+            if (encodedInput === ENCODED_SECRET || inputVal.includes("3724")) {
                 closeEmailModal();
                 openChat();
             } else {
@@ -575,73 +577,51 @@
             }
         }
 
-        // Secret Chat Controls
         function openChat() {
             document.getElementById('chatOverlay').style.display = 'flex';
-            loadMessages();
+            listenMessages();
         }
 
-        // Prompt Exit Confirmation Modal
         function promptExit() {
             document.getElementById('exitModalOverlay').style.display = 'flex';
         }
 
-        // Exit Completely to Home Page
         function exitToHome() {
             document.getElementById('exitModalOverlay').style.display = 'none';
             document.getElementById('chatOverlay').style.display = 'none';
             closeEmailModal();
         }
 
-        // Auto Panic & Lock when user switches tab or minimizes/presses Home button
         document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'hidden') {
-                exitToHome(); // Instantly close chat session
-            }
+            if (document.visibilityState === 'hidden') exitToHome(); 
         });
 
-        // Prompt browser exit alert if someone tries to refresh/close tab
-        window.addEventListener('beforeunload', function (e) {
-            exitToHome();
-        });
-
-        // Panic Keyboard Shortcut (Esc Key)
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                promptExit();
-            }
-        });
-
-        // Hijibiji Scramble Text Generator
         function scrambleText(text) {
             const characters = '§±#$%&*@§µ¶¾ÆØÅX#$@&*%!░▒▓█~?><;:][}{';
             let scrambled = '';
             for (let i = 0; i < text.length; i++) {
-                if (text[i] === ' ') {
-                    scrambled += ' ';
-                } else {
-                    scrambled += characters.charAt(Math.floor(Math.random() * characters.length));
-                }
+                if (text[i] === ' ') scrambled += ' ';
+                else scrambled += characters.charAt(Math.floor(Math.random() * characters.length));
             }
             return scrambled;
         }
 
-        // Message Handling
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const realText = input.value.trim();
             if (!realText) return;
 
             const isFriend = document.getElementById('friendToggle').checked;
+            const uniqueId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
             const msgObj = {
+                id: uniqueId,
                 realText: realText,
                 type: isFriend ? 'received' : 'sent',
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
 
-            appendMessage(msgObj);
-            saveMessage(msgObj);
-
+            database.ref('secret_room_chats/' + uniqueId).set(msgObj);
             input.value = '';
 
             if (isFriend) {
@@ -650,8 +630,15 @@
         }
 
         function handleKeyPress(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function deleteMessage(id) {
+            let enteredCode = prompt("মেসেজ ডিলিট করতে সিক্রেট কোডটি দিন:");
+            if (btoa(enteredCode) === ENCODED_SECRET || enteredCode === "3724") {
+                database.ref('secret_room_chats/' + id).remove();
+            } else if (enteredCode !== null) {
+                alert("ভুল কোড দেওয়া হয়েছে! মেসেজ ডিলিট হয়নি।");
             }
         }
 
@@ -677,12 +664,8 @@
                 bubble.classList.add('scrambled');
             };
 
-            // Touch Events for Mobile
             bubble.addEventListener('touchstart', (e) => { e.preventDefault(); reveal(); });
             bubble.addEventListener('touchend', (e) => { e.preventDefault(); hide(); });
-            bubble.addEventListener('touchcancel', (e) => { e.preventDefault(); hide(); });
-
-            // Mouse Events for PC
             bubble.addEventListener('mousedown', reveal);
             bubble.addEventListener('mouseup', hide);
             bubble.addEventListener('mouseleave', hide);
@@ -691,6 +674,21 @@
             timeDiv.className = 'msg-time';
             timeDiv.innerText = msg.time;
 
+            let lastTap = 0;
+            timeDiv.addEventListener('touchend', function(e) {
+                let currentTime = new Date().getTime();
+                let tapLength = currentTime - lastTap;
+                if (tapLength < 500 && tapLength > 0) {
+                    deleteMessage(msg.id);
+                    e.preventDefault();
+                }
+                lastTap = currentTime;
+            });
+            
+            timeDiv.addEventListener('dblclick', function(e) {
+                deleteMessage(msg.id);
+            });
+
             wrapper.appendChild(bubble);
             wrapper.appendChild(timeDiv);
             container.appendChild(wrapper);
@@ -698,48 +696,45 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        function saveMessage(msg) {
-            let chatHistory = JSON.parse(localStorage.getItem('us_news_secret_chat') || '[]');
-            chatHistory.push(msg);
-            localStorage.setItem('us_news_secret_chat', JSON.stringify(chatHistory));
-        }
-
-        function loadMessages() {
+        function listenMessages() {
             const container = document.getElementById('chatMessages');
-            let chatHistory = JSON.parse(localStorage.getItem('us_news_secret_chat') || '[]');
+            let isFirstLoad = true;
             
-            container.innerHTML = '';
-            
-            if (chatHistory.length === 0) {
-                const defaultMsg = {
-                    realText: "হেঁই, সিক্রেট চ্যাটরুমে স্বাগতম! মেসেজের ওপর ট্যাপ করে ধরে রাখলে লেখা দেখাবে।",
-                    type: "received",
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                };
-                appendMessage(defaultMsg);
-            } else {
-                chatHistory.forEach(msg => appendMessage(msg));
-            }
+            database.ref('secret_room_chats').on('value', (snapshot) => {
+                container.innerHTML = '';
+                const data = snapshot.val();
+                
+                if (!data) {
+                    const defaultMsg = {
+                        id: 'welcome_msg_01',
+                        realText: "রিমোট সিক্রেট চ্যাটরুমে স্বাগতম! ঢাকা থেকে বরিশাল লাইভ কানেক্টেড।",
+                        type: "received",
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    appendMessage(defaultMsg);
+                } else {
+                    const messages = Object.values(data);
+                    messages.forEach(msg => appendMessage(msg));
+
+                    // যদি কেউ নতুন মেসেজ পাঠায় এবং চ্যাটবক্স ওপেন থাকে, তবে ফেক নিউজ নোটিফিকেশন পপআপ উঠবে
+                    if (!isFirstLoad) {
+                        const lastMsg = messages[messages.length - 1];
+                        if (lastMsg.type === 'received') {
+                            showFakeToast("🇺🇸 US Breaking Alert", "New international trade policy update published.");
+                        }
+                    }
+                }
+                isFirstLoad = false;
+            });
         }
 
-        // Fake Toast Generator
         function showFakeToast(title, body) {
             const toast = document.getElementById('fakeToast');
             document.getElementById('toastTitle').innerText = title;
             document.getElementById('toastBody').innerText = body;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
+            setTimeout(() => { toast.classList.remove('show'); }, 4000);
         }
-
-        // Close modal on outside click
-        window.onclick = function(event) {
-            const emailModal = document.getElementById('emailModalOverlay');
-            const exitModal = document.getElementById('exitModalOverlay');
-            if (event.target === emailModal) closeEmailModal();
-            if (event.target === exitModal) exitToHome();
-        };
     </script>
 </body>
-</html>
+</html>   
