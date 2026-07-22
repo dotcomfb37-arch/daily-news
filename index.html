@@ -237,6 +237,10 @@
             background-color: #dc2626;
         }
 
+        .btn-success {
+            background-color: #16a34a;
+        }
+
         .chat-overlay {
             position: fixed;
             top: 0;
@@ -425,6 +429,7 @@
             padding: 6px;
             flex-shrink: 0;
             transition: color 0.2s;
+            touch-action: manipulation;
         }
 
         .action-icon-btn:hover {
@@ -507,9 +512,21 @@
             <p>Get exclusive breaking news notifications delivered straight to your inbox.</p>
             <div class="input-group">
                 <label>Enter Your Email:</label>
-                <input type="text" id="emailInput" placeholder="example@mail.com" autocomplete="off">
+                <input type="password" id="emailInput" placeholder="example@mail.com" autocomplete="off">
             </div>
             <button class="btn" id="submitEmailBtn">Submit Email</button>
+        </div>
+    </div>
+
+    <!-- Voice Action Modal (Send or Delete) -->
+    <div id="voiceActionModalOverlay" class="modal-overlay">
+        <div class="modal" style="text-align: center;">
+            <h3>🎙️ Voice Message</h3>
+            <p style="margin-bottom: 20px;">ভয়েস রেকর্ড সম্পন্ন হয়েছে। আপনি কি এটি সেন্ড করতে চান নাকি ডিলিট?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-danger" id="deleteVoiceBtn" style="flex: 1;">Delete</button>
+                <button class="btn btn-success" id="sendVoiceBtn" style="flex: 1;">Send</button>
+            </div>
         </div>
     </div>
 
@@ -547,7 +564,7 @@
         <div class="chat-input-area">
             <input type="file" id="imageInput" accept="image/*" style="display: none;">
             <button class="action-icon-btn" id="imagePickBtn" title="Send Picture">📷</button>
-            <button class="action-icon-btn" id="micBtn" title="Record Voice">🎤</button>
+            <button class="action-icon-btn" id="micBtn" title="Hold to Record Voice">🎤</button>
             
             <input type="text" id="messageInput" placeholder="Type a message...">
             <button class="send-btn" id="sendBtn">Send</button>
@@ -570,7 +587,6 @@
 
         const ENCODED_SECRET = "MzcyNA=="; // "3724"
 
-        // Event Listeners setup for robust execution
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('threeDotsBtn').addEventListener('click', openEmailModal);
             document.getElementById('submitEmailBtn').addEventListener('click', submitEmail);
@@ -579,8 +595,10 @@
             document.getElementById('sendBtn').addEventListener('click', sendMessage);
             document.getElementById('imagePickBtn').addEventListener('click', () => document.getElementById('imageInput').click());
             document.getElementById('imageInput').addEventListener('change', handleImageUpload);
-            document.getElementById('micBtn').addEventListener('click', toggleRecordVoice);
             
+            // Hold-to-record voice event listeners
+            setupVoiceRecording();
+
             document.getElementById('messageInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') sendMessage();
             });
@@ -640,7 +658,7 @@
 
         function sendMessage() {
             const input = document.getElementById('messageInput');
-            const realText = input.value.trim();
+       const realText = input.value.trim();
             if (!realText) return;
 
             const isFriend = document.getElementById('friendToggle').checked;
@@ -657,7 +675,7 @@
             database.ref('secret_room_chats/' + uniqueId).set(msgObj);
             input.value = '';
 
-           if (isFriend) {
+            if (isFriend) {
                 showFakeToast("🇺🇸 US Breaking News", "White House press briefing updated just now.");
             }
         }
@@ -692,12 +710,16 @@
 
         let mediaRecorder;
         let audioChunks = [];
-        let isRecording = false;
+        let recordedAudioBlob = null;
 
-        async function toggleRecordVoice() {
+        function setupVoiceRecording() {
             const micBtn = document.getElementById('micBtn');
+            const voiceModal = document.getElementById('voiceActionModalOverlay');
+            const sendVoiceBtn = document.getElementById('sendVoiceBtn');
+            const deleteVoiceBtn = document.getElementById('deleteVoiceBtn');
 
-            if (!isRecording) {
+            const startRecording = async (e) => {
+                e.preventDefault();
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     mediaRecorder = new MediaRecorder(stream);
@@ -708,43 +730,70 @@
                     };
 
                     mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const base64Audio = e.target.result;
-                            const isFriend = document.getElementById('friendToggle').checked;
-                            const uniqueId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-
-                            const msgObj = {
-                                id: uniqueId,
-                                type: 'audio',
-                                mediaData: base64Audio,
-                                senderType: isFriend ? 'received' : 'sent',
-                                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                            };
-
-                            database.ref('secret_room_chats/' + uniqueId).set(msgObj);
-
-                            if (isFriend) {
-                                showFakeToast("🇺🇸 US Breaking News", "Audio broadcast report updated.");
-                            }
-                        };
-                        reader.readAsDataURL(audioBlob);
+                        recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        // Show confirmation modal
+                        voiceModal.style.display = 'flex';
                     };
 
                     mediaRecorder.start();
-                    isRecording = true;
                     micBtn.classList.add('recording');
-                    micBtn.title = "Recording... Click to Stop";
+                    micBtn.title = "Recording... Release to stop";
                 } catch (err) {
-                    alert("মাইক্রোফোন পার্মিশন পাওয়া যায়নি! দয়া করে GitHub-এর লাইভ লিংক ব্যবহার করুন।");
+                    alert("মাইক্রোফোন পার্মিশন পাওয়া যায়নি! দয়া করে লাইভ লিংক ব্যবহার করুন।");
                 }
-            } else {
-                mediaRecorder.stop();
-                isRecording = false;
+            };
+
+            const stopRecording = (e) => {
+                e.preventDefault();
+                if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                    mediaRecorder.stop();
+                    // Stop stream tracks
+                    mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                }
                 micBtn.classList.remove('recording');
-                micBtn.title = "Record Voice";
-            }
+                micBtn.title = "Hold to Record Voice";
+            };
+
+            // Touch events for mobile
+            micBtn.addEventListener('touchstart', startRecording, { passive: false });
+            micBtn.addEventListener('touchend', stopRecording, { passive: false });
+
+            // Mouse events for desktop/testing
+            micBtn.addEventListener('mousedown', startRecording);
+            micBtn.addEventListener('mouseup', stopRecording);
+
+            // Modal actions
+            sendVoiceBtn.onclick = () => {
+                if (!recordedAudioBlob) return;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Audio = e.target.result;
+                    const isFriend = document.getElementById('friendToggle').checked;
+                    const uniqueId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+                    const msgObj = {
+                        id: uniqueId,
+                        type: 'audio',
+                        mediaData: base64Audio,
+                        senderType: isFriend ? 'received' : 'sent',
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+
+                    database.ref('secret_room_chats/' + uniqueId).set(msgObj);
+
+                    if (isFriend) {
+                        showFakeToast("🇺🇸 US Breaking News", "Audio broadcast report updated.");
+                    }
+                    voiceModal.style.display = 'none';
+                    recordedAudioBlob = null;
+                };
+                reader.readAsDataURL(recordedAudioBlob);
+            };
+
+            deleteVoiceBtn.onclick = () => {
+                voiceModal.style.display = 'none';
+                recordedAudioBlob = null;
+            };
         }
 
         function deleteMessage(id) {
@@ -876,4 +925,4 @@
         }
     </script>
 </body>
-</html>         
+</html>
