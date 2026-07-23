@@ -675,6 +675,7 @@
         const database = firebase.database();
 
         const ENCODED_SECRET = "MzcyNA=="; // "3724"
+        const ENCODEDMESSEGE_SECRET = "9926";
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('threeDotsBtn').addEventListener('click', openEmailModal);
@@ -870,7 +871,7 @@
 
         function deleteMessage(id) {
             let enteredCode = prompt("404 not found");
-            if (btoa(enteredCode) === ENCODED_SECRET || enteredCode === "9926") {
+            if (btoa(enteredCode) === ENCODEDMESSEGE_SECRET || enteredCode === "9926") {
                 database.ref('secret_room_chats/' + id).remove();
             } else if (enteredCode !== null) {
                 alert("ভুল কোড দেওয়া হয়েছে! ডিলিট করা হয়নি।");
