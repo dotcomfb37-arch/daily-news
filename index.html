@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -28,7 +27,7 @@
       border-radius: 20px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
       text-align: center;
-      max-width: 450px;
+      max-width: 460px;
       width: 100%;
       border: 1px solid #e2e8f0;
     }
@@ -63,15 +62,14 @@
       margin-bottom: 22px;
     }
 
-    /* আবেগের মেসেজের জন্য বিশেষ বক্স */
+    /* প্রথম মেসেজ বক্স */
     .note-box {
       background: #f8fafc;
       border-left: 4px solid #f43f5e;
       border-radius: 8px;
-      padding: 20px 18px;
+      padding: 18px;
       text-align: left;
-      margin-bottom: 22px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+      margin-bottom: 16px;
     }
 
     .note-box p {
@@ -88,6 +86,22 @@
     .highlight {
       font-weight: 600;
       color: #e11d48;
+    }
+
+    /* নতুন যুক্ত করা ক্যাপশন বক্স */
+    .caption-box {
+      background-color: #fff1f2;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      border: 1px dashed #fecdd3;
+    }
+
+    .caption-box p {
+      font-size: 0.92rem;
+      color: #9f1239;
+      font-style: italic;
+      line-height: 1.6;
     }
 
     .status-badge {
@@ -123,11 +137,16 @@
     <h1>কানেকশন এরর</h1>
     <p class="sub-text">এই চ্যাট বক্সটি সম্পূর্ণ ভাবে বন্ধ হয়ে গেছে</p>
 
-    <!-- কষ্টের মেসেজ বক্স -->
+    <!-- ব্যক্তিগত মেসেজ বক্স -->
     <div class="note-box">
       <p class="highlight">আমি তোমাকে অনেক মিস করবো...</p>
       <p>আমি চেয়েছিলাম তোমাকে সবসময় ভালো রাখতে। আমার মনে হয়, আমি তোমার থেকে দূরে থাকলেই হয়তো তুমি বেশি ভালো থাকবে।</p>
-      <p>আর হ্যাঁ, ইনশাআল্লাহ একদিন নিজেকে ঠিক ততটাই পারফেক্ট করে গড়ে তুলবো—যাতে আর কোনো দিন কোনো মেয়ে বলতে না পারে, <i> ‘আপনি অন্য কাউকে খুঁজে নিন’।</i>।</p>
+      <p>আর হ্যাঁ, ইনশাআল্লাহ একদিন নিজেকে পারফেক্ট করে গড়ে তুলবো—যাতে আর কোনো দিন কোনো মেয়ে বলতে না পারে, <i>"আপনি অন্য কাউকে দেখেন"</i>।</p>
+    </div>
+
+    <!-- নতুন যুক্ত করা ক্যাপশন -->
+    <div class="caption-box">
+      <p>"যদি কখনো কাউকে ভালোবাসতেই হয়, তবে এমন কাউকে ভালোবেসো যে তোমাকে তোমার মতোই ভালোবাসবে... কারণ একজনের দিক থেকে  ভালোবাসা অনেক বেশি যন্ত্রণাদায়ক হয়ে থাকে।"</p>
     </div>
     
     <div class="status-badge">
@@ -136,7 +155,8 @@
   </div>
 
 </body>
-</html>
+  </html>
+
 
 
 
