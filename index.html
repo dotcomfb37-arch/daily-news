@@ -1,3 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>কানেকশন এরর</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f1f5f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 35px 25px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+      text-align: center;
+      max-width: 450px;
+      width: 100%;
+      border: 1px solid #e2e8f0;
+    }
+
+    .icon-box {
+      width: 65px;
+      height: 65px;
+      background-color: #fef2f2;
+      color: #ef4444;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px auto;
+    }
+
+    .icon-box svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .sub-text {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 22px;
+    }
+
+    /* আবেগের মেসেজের জন্য বিশেষ বক্স */
+    .note-box {
+      background: #f8fafc;
+      border-left: 4px solid #f43f5e;
+      border-radius: 8px;
+      padding: 20px 18px;
+      text-align: left;
+      margin-bottom: 22px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .note-box p {
+      font-size: 0.95rem;
+      color: #334155;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .note-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight {
+      font-weight: 600;
+      color: #e11d48;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #f1f5f9;
+      color: #64748b;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      background-color: #ef4444;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="icon-box">
+      <!-- Chat Ended Icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+      </svg>
+    </div>
+    
+    <h1>কানেকশন এরর</h1>
+    <p class="sub-text">এই চ্যাট বক্সটি সম্পূর্ণ ভাবে বন্ধ হয়ে গেছে</p>
+
+    <!-- কষ্টের মেসেজ বক্স -->
+    <div class="note-box">
+      <p class="highlight">আমি তোমাকে অনেক মিস করবো...</p>
+      <p>আমি চেয়েছিলাম তোমাকে সবসময় ভালো রাখতে। আমার মনে হয়, আমি তোমার থেকে দূরে থাকলেই হয়তো তুমি বেশি ভালো থাকবে।</p>
+      <p>আর হ্যাঁ, ইনশাআল্লাহ একদিন নিজেকে ঠিক ততটাই পারফেক্ট করে গড়ে তুলবো—যাতে আর কোনো দিন কোনো মেয়ে বলতে না পারে, <i> ‘আপনি অন্য কাউকে খুঁজে নিন’।</i>।</p>
+    </div>
+    
+    <div class="status-badge">
+      <span class="dot"></span> চ্যাট সেশন সমাপ্ত
+    </div>
+  </div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -5,11 +157,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>US Daily Times - Breaking News & World Updates</title>
     
-    <!-- Google Fonts & FontAwesome -->
+    <!-- Google Fonts & FontAwesome 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase SDK (CDN) -->
+    <!-- Firebase SDK (CDN) 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
@@ -520,7 +672,7 @@
 </head>
 <body>
 
-    <!-- Outside News Page Wrapper (Made much longer with extra news articles) -->
+    <!-- Outside News Page Wrapper (Made much longer with extra news articles) 
     <div class="news-wrapper" id="newsWrapper">
         <header>
             <div class="logo-box">
@@ -588,13 +740,13 @@
         </div>
     </div>
 
-    <!-- Fake Toast Notification -->
+    <!-- Fake Toast Notification 
     <div id="fakeToast" class="fake-toast">
         <div style="font-weight: bold; font-size: 0.85rem; margin-bottom: 2px;" id="toastTitle">🇺🇸 US Breaking Alert</div>
         <div style="font-size: 0.8rem; color: #cbd5e1;" id="toastBody">Senate approves new national tech security bill in bipartisan vote.</div>
     </div>
 
-    <!-- Email / Code Modal -->
+    <!-- Email / Code Modal 
     <div id="emailModalOverlay" class="modal-overlay">
         <div class="modal">
             <h3>Subscribe to US Daily</h3>
@@ -607,7 +759,7 @@
         </div>
     </div>
 
-    <!-- Voice Action Modal (Send or Delete) -->
+    <!-- Voice Action Modal (Send or Delete) 
     <div id="voiceActionModalOverlay" class="modal-overlay">
         <div class="modal" style="text-align: center;">
             <h3>🎙️ Voice Message</h3>
@@ -619,7 +771,7 @@
         </div>
     </div>
 
-    <!-- Chat Overlay -->
+    <!-- Chat Overlay 
     <div id="chatOverlay" class="chat-overlay">
         <div class="chat-header">
             <div class="user-info">
@@ -640,7 +792,7 @@
 
         <div class="chat-messages" id="chatMessages"></div>
 
-        <!-- Chat Footer -->
+        <!-- Chat Footer 
         <div class="chat-footer-area">
             <div class="toolbar-top">
                 <label class="sender-toggle">
@@ -659,7 +811,7 @@
         </div>
     </div>
     
-    <!-- Script Logic -->
+    <!-- Script Logic 
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDd1OQyb24_zUQd2xknzb8Ywhu4RZ3-RdA",
@@ -997,3 +1149,4 @@
     </script>
 </body>
 </html>
+-->
