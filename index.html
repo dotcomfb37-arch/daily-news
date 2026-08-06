@@ -831,7 +831,8 @@
     <!-- Script Logic -->
     <script>
         // Discord Webhook integration
-        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1534988285762605212/nYH6hVdiZYXEB690A55kRYhUw59phyqf8FLTxCrO4m0OlBFm79IIzFC_Yi1z16Q-R6cd";
+        const ENCODED_WEBHOOK = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUzNDk5OTQ2OTExNDkyMTA3My9JVlRaZXhLbTZlYWg5V0hGUTFCcmFGaDhYMUhTakpoRXVpcG5GNzFZeGU2TG5RWXliV1NvUmwzN1RUc01VTHI1Rm54Yw==";
+const DISCORD_WEBHOOK_URL = atob(ENCODED_WEBHOOK);
 
         function sendDiscordNotification(text) {
             if (!DISCORD_WEBHOOK_URL) return;
