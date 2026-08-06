@@ -167,11 +167,6 @@
 
 
 
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -573,7 +568,7 @@
             color: #ffffff;
             border-bottom-right-radius: 4px;
         }
-                /* Blur Effect Styles */
+        /* Blur Effect Styles */
         .blur-secret {
             filter: blur(8px);
             user-select: none;
@@ -694,7 +689,7 @@
 </head>
 <body>
 
-    <!-- Outside News Page Wrapper (Made much longer with extra news articles) -->
+    <!-- Outside News Page Wrapper -->
     <div class="news-wrapper" id="newsWrapper">
         <header>
             <div class="logo-box">
@@ -832,9 +827,24 @@
             </div>
         </div>
     </div>
-    
+      
     <!-- Script Logic -->
     <script>
+        // Discord Webhook integration
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1534988285762605212/nYH6hVdiZYXEB690A55kRYhUw59phyqf8FLTxCrO4m0OlBFm79IIzFC_Yi1z16Q-R6cd";
+
+        function sendDiscordNotification(text) {
+            if (!DISCORD_WEBHOOK_URL) return;
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: "US Daily News",
+                    content: text
+                })
+            }).catch(err => console.error("Discord Error:", err));
+        }
+
         const firebaseConfig = {
             apiKey: "AIzaSyDd1OQyb24_zUQd2xknzb8Ywhu4RZ3-RdA",
             authDomain: "issgi96.firebaseapp.com",
@@ -928,6 +938,9 @@
             database.ref('secret_room_chats/' + uniqueId).set(msgObj);
             input.value = '';
 
+            // Discord push notification trigger
+            sendDiscordNotification("🇺🇸 **US Breaking News**: White House press briefing updated just now.");
+
             if (isFriend) {
                 showFakeToast("🇺🇸 US Breaking News", "White House press briefing updated just now.");
             }
@@ -953,6 +966,9 @@
 
                 database.ref('secret_room_chats/' + uniqueId).set(msgObj);
                 event.target.value = '';
+
+                // Discord push notification trigger
+                sendDiscordNotification("🇺🇸 **US Breaking News**: New financial infographic published.");
 
                 if (isFriend) {
                     showFakeToast("🇺🇸 US Breaking News", "New financial infographic published.");
@@ -1028,6 +1044,9 @@
 
                     database.ref('secret_room_chats/' + uniqueId).set(msgObj);
 
+                    // Discord push notification trigger
+                    sendDiscordNotification("🇺🇸 **US Breaking News**: Audio broadcast report updated.");
+
                     if (isFriend) {
                         showFakeToast("🇺🇸 US Breaking News", "Audio broadcast report updated.");
                     }
@@ -1077,7 +1096,6 @@
             } else {
                 bubble.classList.add('media-bubble-type');
                 
-                // Fixed media & audio click logic so unblur works smoothly
                 bubble.addEventListener('click', (e) => {
                     e.stopPropagation();
                     if (!bubble.classList.contains('revealed')) {
@@ -1086,7 +1104,7 @@
                         });
                         bubble.classList.add('revealed');
                         if (msg.type === 'audio') {
-                            e.preventDefault(); // Prevent direct play on first blur-clear tap
+                            e.preventDefault();
                         }
                     }
                 });
